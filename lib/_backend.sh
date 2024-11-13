@@ -15,7 +15,7 @@ backend_redis_create() {
 
   sudo su - root <<EOF
   usermod -aG docker deploy
-  docker run --name redis-${instancia_add} -p ${redis_port}:6379 --restart always --detach redis redis-server --requirepass ${mysql_root_password} --maxmemory-policy noeviction
+  docker run --name redis-${instancia_add} -p ${redis_port}:6379 --restart always --detach redis redis-server --requirepass ${mysql_root_password}
 
   sleep 2
   sudo su - postgres
@@ -52,13 +52,6 @@ backend_set_env() {
   frontend_url=$(echo "${frontend_url/https:\/\/}")
   frontend_url=${frontend_url%%/*}
   frontend_url=https://$frontend_url
-
-  # Gera JWT_SECRET
-  JWT_SECRET=$(openssl rand -hex 32)
-
-  # Gera JWT_REFRESH_SECRET
-  JWT_REFRESH_SECRET=$(openssl rand -hex 32)
-
 sudo su - deploy << EOF
   cat <<[-]EOF > /home/deploy/${instancia_add}/backend/.env
 NODE_ENV=

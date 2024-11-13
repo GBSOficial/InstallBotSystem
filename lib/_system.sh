@@ -17,9 +17,6 @@ system_create_user() {
   sudo su - root <<EOF
   useradd -m -p $(openssl passwd -6 ${mysql_root_password}) -s /bin/bash -G sudo deploy
   usermod -aG sudo deploy
-  echo 'export NVM_DIR="\$HOME/.nvm"' >> /home/deploy/.bashrc
-  echo '[ -s "\$NVM_DIR/nvm.sh" ] && \. "\$NVM_DIR/nvm.sh"' >> /home/deploy/.bashrc
-  echo '[ -s "\$NVM_DIR/bash_completion" ] && \. "\$NVM_DIR/bash_completion"' >> /home/deploy/.bashrc
 EOF
 
   sleep 2
@@ -58,8 +55,7 @@ system_update() {
 
   sudo su - root <<EOF
   sudo apt -y update
-  sudo apt-get install -y build-essential libxshmfence-dev libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
-  sudo apt-get autoremove -y
+  sudo apt-get install -y libxshmfence-dev libgbm-dev wget unzip fontconfig locales gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
 EOF
 
   sleep 2
@@ -80,7 +76,6 @@ deletar_tudo() {
   sleep 2
 
   sudo su - root <<EOF
-  docker container stop redis-${empresa_delete}
   docker container rm redis-${empresa_delete} --force
   cd && rm -rf /etc/nginx/sites-enabled/${empresa_delete}-frontend
   cd && rm -rf /etc/nginx/sites-enabled/${empresa_delete}-backend  
@@ -276,30 +271,24 @@ EOF
 #   None
 #######################################
 system_node_install() {
-  print_banner
-  printf "${WHITE} 💻 Instalando nodejs...${GRAY_LIGHT}"
+    print_banner
+  printf "${WHITE} 💻 Instalando node.js...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
 
   sudo su - root <<EOF
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get updated
-sudo apt-get install -y nodejs=20.17.0-1nodesource1
-sleep 2
-
-sudo npm install -g npm@10.8.0
-sleep 2
-
-sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-
-sudo apt-get update -y
-
-sudo apt-get -y install postgresql-16
-sleep 2
-
-sudo timedatectl set-timezone America/Sao_Paulo
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+  apt-get install -y nodejs
+  sleep 2
+  npm install -g npm@latest
+  sleep 2
+  sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+  sudo apt-get update -y && sudo apt-get -y install postgresql
+  sleep 2
+  sudo timedatectl set-timezone America/Sao_Paulo
+  
 EOF
 
   sleep 2
@@ -554,7 +543,6 @@ system_nginx_install() {
   sudo su - root <<EOF
   apt install -y nginx
   rm /etc/nginx/sites-enabled/default
-  rm /etc/nginx/sites-available/default
 EOF
 
   sleep 2
