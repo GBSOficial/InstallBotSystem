@@ -343,13 +343,13 @@ system_firewall_conf() {
   sleep 2
 
   sudo su - root <<EOF
-sudo ufw default allow outgoing
-sudo ufw default deny incoming
-sudo ufw allow ssh
-sudo ufw allow 22
-sudo ufw allow 80
-sudo ufw allow 443
-sudo ufw enable
+      sudo ufw default allow outgoing
+      sudo ufw default deny incoming
+      sudo ufw allow ssh
+      sudo ufw allow 22
+      sudo ufw allow 80
+      sudo ufw allow 443
+      sudo ufw enable
 EOF
 
   sleep 2
@@ -367,12 +367,14 @@ system_docker_install() {
   sleep 2
 
   sudo su - root <<EOF
-  apt install -y apt-transport-https \
+apt install -y apt-transport-https \
                  ca-certificates curl \
                  software-properties-common
+
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
   
-  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+  add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+
   apt install -y docker-ce
 EOF
 
@@ -454,7 +456,7 @@ system_pm2_install() {
   printf "${WHITE} 💻 Instalando o pm2...${GRAY_LIGHT}\n\n"
 
   sudo su - root <<EOF
-  npm install -g pm2@latest
+  npm install -g pm2
 EOF
 
   sleep 2
