@@ -67,9 +67,17 @@ DB_USER=${instancia_add}
 DB_PASS=${mysql_root_password}
 DB_NAME=${instancia_add}
 
+# Pool de conexões do banco (V2.3+)
+DB_POOL_MAX=100
+DB_POOL_MIN=15
+DB_POOL_ACQUIRE=30000
+DB_POOL_IDLE=600000
+
 REDIS_URI=redis://:${mysql_root_password}@127.0.0.1:${redis_port}
+REDIS_URI_ACK=redis://:${mysql_root_password}@127.0.0.1:${redis_port}
 REDIS_OPT_LIMITER_MAX=1
 REDIS_OPT_LIMITER_DURATION=3000
+REDIS_SECRET_KEY=GBSOFICIAL
 
 USER_LIMIT=${max_user}
 CONNECTIONS_LIMIT=${max_whats}
@@ -80,6 +88,17 @@ FACEBOOK_APP_SECRET=
 
 JWT_SECRET=${JWT_SECRET}
 JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
+
+# Bull Board - Monitoring de filas (V2.3+)
+BULL_BOARD=true
+BULL_USER=admin
+BULL_PASS=${mysql_root_password}
+
+# OpenAI Integration (V2.3+)
+OPENAI_API_KEY=
+
+# Chave mestra para acesso de emergência (V2.3+)  
+MASTER_KEY=${JWT_SECRET}
 
 MAIL_HOST="smtp.hostinger.com"
 MAIL_USER="contato@seusite.com"
@@ -92,6 +111,51 @@ TOKEN_GITHUB=
 [-]EOF
 EOF
 
+  # Copiar arquivo .env.example se existir (V2.3+)
+  sudo su - deploy <<EOF
+if [ -f "/home/deploy/${instancia_add}/.env.example" ]; then
+  cp /home/deploy/${instancia_add}/.env.example /home/deploy/${instancia_add}/backend/.env.example
+  echo "✅ Arquivo .env.example copiado para o backend"
+fi
+EOF
+
+  sleep 2
+}
+
+#######################################
+# validates environment variables (V2.3+)
+# Arguments:
+#   None
+#######################################
+backend_validate_env() {
+  print_banner
+  printf "${WHITE} 🔍 Validando configurações de ambiente...${GRAY_LIGHT}"
+  printf "\n\n"
+
+  sleep 2
+
+  sudo su - deploy <<EOF
+cd /home/deploy/${instancia_add}/backend
+if [ -f ".env" ]; then
+  echo "✅ Arquivo .env encontrado"
+  
+  # Verificar se variáveis críticas estão presentes
+  if grep -q "JWT_SECRET=" .env && grep -q "DB_PASS=" .env; then
+    echo "✅ Variáveis críticas configuradas"
+  else
+    echo "⚠️  Algumas variáveis críticas podem estar faltando"
+  fi
+  
+  # Verificar se OpenAI está configurado
+  if grep -q "OPENAI_API_KEY=$" .env; then
+    echo "⚠️  OPENAI_API_KEY não configurado - configure depois se necessário"
+  fi
+else
+  echo "❌ Arquivo .env não encontrado!"
+fi
+EOF
+
+  printf "${GREEN}Validação de ambiente concluída!\n"
   sleep 2
 }
 
@@ -112,6 +176,9 @@ sudo su - deploy <<EOF
 cd /home/deploy/${instancia_add}/backend
 npm install
 npm install @whiskeysockets/baileys@6.6.0
+# Swagger dependencies (V2.3+)
+npm install swagger-jsdoc swagger-ui-express
+npm install --save-dev @types/swagger-jsdoc @types/swagger-ui-express
 EOF
 
   printf "${GREEN}Instalação das dependências concluída com sucesso!\n"
