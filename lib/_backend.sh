@@ -179,6 +179,8 @@ npm install @whiskeysockets/baileys@6.6.0
 # Swagger dependencies (V2.3+)
 npm install swagger-jsdoc swagger-ui-express
 npm install --save-dev @types/swagger-jsdoc @types/swagger-ui-express
+# V1 specific dependencies
+npm install --save-dev @craco/craco
 EOF
 
   printf "${GREEN}Instalação das dependências concluída com sucesso!\n"

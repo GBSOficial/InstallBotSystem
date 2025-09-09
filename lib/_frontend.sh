@@ -17,6 +17,8 @@ frontend_node_dependencies() {
   sudo su - deploy <<EOF
   cd /home/deploy/${instancia_add}/frontend
   npm install --force
+  # V1 specific dependencies
+  npm install @craco/craco
 EOF
 
   sleep 2
@@ -108,6 +110,23 @@ sudo su - deploy << EOF
   app.listen(${frontend_port});
 
 [-]EOF
+EOF
+
+# Create craco.config.js for V1 compatibility
+sudo su - deploy << EOF
+if [ ! -f "/home/deploy/${instancia_add}/frontend/craco.config.js" ]; then
+  cat <<[-]EOF > /home/deploy/${instancia_add}/frontend/craco.config.js
+module.exports = {
+  webpack: {
+    configure: (webpackConfig) => {
+      // V1 specific webpack configurations
+      return webpackConfig;
+    },
+  },
+};
+[-]EOF
+  echo "✅ craco.config.js criado para compatibilidade V1"
+fi
 EOF
 
   sleep 2
