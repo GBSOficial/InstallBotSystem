@@ -1,5 +1,157 @@
 # 📋 **CHANGELOG - INSTALADOR BOTSYSTEM**
 
+## **V2.5 - Integração Facebook Messenger, Instagram Direct e OAuth 2.0**
+
+### 🆕 **NOVAS FUNCIONALIDADES:**
+
+#### **1. Suporte Completo Facebook Messenger e Instagram Direct**
+- ✅ Integração nativa com Facebook Messenger
+- ✅ Integração nativa com Instagram Direct
+- ✅ Webhooks automáticos para recebimento de mensagens
+- ✅ Envio de mensagens, mídia e botões interativos
+- ✅ Gestão unificada de múltiplos canais (WhatsApp + Facebook + Instagram)
+
+#### **2. OAuth 2.0 - Login Social**
+- ✅ Login com Google (OAuth 2.0)
+- ✅ Login com Facebook (OAuth 2.0)
+- ✅ Passport.js configurado automaticamente
+- ✅ Session management seguro
+- ✅ Integração com usuários existentes
+
+#### **3. Novas Dependências**
+- ✅ `passport` - Autenticação OAuth
+- ✅ `passport-google-oauth20` - Google OAuth
+- ✅ `passport-facebook` - Facebook OAuth
+- ✅ `express-session` - Gerenciamento de sessões
+- ✅ TypeScript types para todas as dependências
+
+#### **4. Backend Aprimorado**
+- ✅ MetaWebhookController - Webhooks Facebook/Instagram
+- ✅ OAuthController - Autenticação social
+- ✅ SendUniversalMessageService - Envio multicanal
+- ✅ ProcessFacebookWebhookService - Processamento FB
+- ✅ ProcessInstagramWebhookService - Processamento IG
+- ✅ Libs facebook-messenger.ts e instagram-direct.ts
+
+#### **5. Frontend Modernizado**
+- ✅ MetaConnectionModal - Modal unificado para FB/IG
+- ✅ OAuthCallback page - Callback OAuth
+- ✅ ConnectionsManager atualizado - Múltiplos canais
+- ✅ Ícones dinâmicos por tipo de conexão
+- ✅ Interface responsiva e intuitiva
+
+#### **6. Database**
+- ✅ Migration OAuth (googleId, facebookId)
+- ✅ Migration campos Meta (type, pageId, pageAccessToken, instagramAccountId)
+- ✅ Migration showGroupNotification
+- ✅ Remoção de constraints desnecessárias
+
+### 🔧 **MELHORIAS:**
+
+#### **Sistema Multi-Canal:**
+- ✅ Suporte simultâneo WhatsApp + Facebook + Instagram
+- ✅ Tickets unificados independente do canal
+- ✅ Contatos sincronizados entre canais
+- ✅ Histórico de conversas centralizado
+
+#### **Segurança:**
+- ✅ OAuth 2.0 padrão da indústria
+- ✅ Tokens JWT seguros
+- ✅ Session secrets configuráveis
+- ✅ HTTPS obrigatório para webhooks
+
+#### **Performance:**
+- ✅ SendWebSocketEvent helper - Eventos otimizados
+- ✅ BaileysOptimizer - Gestão de sessões WhatsApp
+- ✅ GC Manager - Gerenciamento de memória
+- ✅ Rate limiting aprimorado
+
+### 📋 **VARIÁVEIS DE AMBIENTE (V2.5):**
+
+#### **Novas variáveis adicionadas:**
+```bash
+# OAuth Google
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=https://seu-backend.com/oauth/google/callback
+
+# OAuth Facebook  
+FACEBOOK_APP_ID=
+FACEBOOK_APP_SECRET=
+FACEBOOK_CALLBACK_URL=https://seu-backend.com/oauth/facebook/callback
+
+# Session
+SESSION_SECRET=chave-secreta-gerada
+```
+
+### 🚀 **INSTRUÇÕES DE ATUALIZAÇÃO:**
+
+#### **Para Instalações Novas:**
+```bash
+# O instalador agora configura automaticamente:
+# 1. Dependências OAuth (passport, passport-google-oauth20, passport-facebook)
+# 2. Variáveis de ambiente Facebook/Instagram/OAuth
+# 3. Webhooks Meta (Facebook + Instagram)
+# 4. Sistema multi-canal completo
+
+# Após instalação:
+# 1. Configure credenciais OAuth no .env
+# 2. Configure webhook no Facebook Developers
+# 3. Conecte páginas Facebook e contas Instagram Business
+```
+
+#### **Para Atualizações de V2.4 ou Anterior:**
+```bash
+cd /home/deploy/botsystem/backend
+
+# 1. Instalar novas dependências OAuth
+npm install passport passport-google-oauth20 passport-facebook express-session
+npm install --save-dev @types/passport @types/passport-google-oauth20 @types/passport-facebook @types/express-session
+
+# 2. Adicionar novas variáveis ao .env
+# (Copie do .env.example as seções OAuth)
+
+# 3. Executar novas migrations
+npx sequelize db:migrate
+
+# 4. Recompilar e reiniciar
+npm run build
+pm2 restart botsystem-backend
+pm2 restart botsystem-frontend
+```
+
+### ⚠️ **NOTAS IMPORTANTES:**
+
+1. **OAuth Credentials:** Configure após instalação no Google Cloud Console e Facebook Developers
+2. **Webhooks Meta:** HTTPS obrigatório - Configure após obter SSL
+3. **Página Facebook:** Necessário ter página Facebook e Instagram Business conectado
+4. **Permissões:** App Facebook precisa permissões: pages_messaging, instagram_basic, instagram_manage_messages
+5. **Compatibilidade:** 100% compatível com instalações V2.4 e anteriores
+
+### 🔧 **CONFIGURAÇÃO FACEBOOK DEVELOPERS:**
+
+```bash
+# 1. Criar app em https://developers.facebook.com
+# 2. Adicionar produtos: Messenger, Instagram
+# 3. Configurar webhook:
+#    URL: https://seu-backend.com/api/webhooks/meta
+#    Verify Token: qualquer-string-secreta
+# 4. Subscribir eventos:
+#    - messages
+#    - messaging_postbacks  
+#    - messaging_optins
+#    - message_deliveries
+#    - message_reads
+```
+
+### 📊 **PRÓXIMAS VERSÕES:**
+
+- V2.6: Telegram Integration
+- V2.7: Twitter/X Direct Messages
+- V2.8: Email Integration (SMTP/IMAP)
+
+---
+
 ## **V2.4 - Suporte à Versão v1 do BotSystem**
 
 ### 🆕 **NOVAS FUNCIONALIDADES:**

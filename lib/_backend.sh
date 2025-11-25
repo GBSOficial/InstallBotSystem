@@ -83,8 +83,17 @@ USER_LIMIT=${max_user}
 CONNECTIONS_LIMIT=${max_whats}
 CLOSED_SEND_BY_ME=true
 
+# OAuth Configuration (V2.5+)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=${backend_url}/oauth/google/callback
+
 FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET=
+FACEBOOK_CALLBACK_URL=${backend_url}/oauth/facebook/callback
+
+# Session Configuration (V2.5+)
+SESSION_SECRET=${JWT_SECRET}
 
 JWT_SECRET=${JWT_SECRET}
 JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET}
@@ -181,6 +190,9 @@ npm install swagger-jsdoc swagger-ui-express
 npm install --save-dev @types/swagger-jsdoc @types/swagger-ui-express
 # V1 specific dependencies
 npm install --save-dev @craco/craco
+# OAuth dependencies (V2.5+)
+npm install passport passport-google-oauth20 passport-facebook express-session
+npm install --save-dev @types/passport @types/passport-google-oauth20 @types/passport-facebook @types/express-session
 EOF
 
   printf "${GREEN}Instalação das dependências concluída com sucesso!\n"
